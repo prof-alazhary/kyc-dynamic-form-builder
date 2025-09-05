@@ -100,8 +100,44 @@ const validateMax = (value: any, rule: ValidationRule): ValidationResult => {
 
 const validatePattern = (value: any, rule: ValidationRule): ValidationResult => {
   if (typeof value !== 'string') return { isValid: true, error: null };
-  const pattern = rule.value as RegExp;
+  
+  let pattern: RegExp;
+  
+  // Handle both RegExp objects and string patterns
+  if (rule.value instanceof RegExp) {
+    pattern = rule.value;
+  } else if (typeof rule.value === 'string') {
+    try {
+      // Try to create RegExp from string
+      pattern = new RegExp(rule.value);
+    } catch (error) {
+      // If it's not a valid regex string, return invalid
+      return {
+        isValid: false,
+        error: rule.message,
+      };
+    }
+  } else {
+    // If it's neither RegExp nor string, return invalid
+    return {
+      isValid: false,
+      error: rule.message,
+    };
+  }
+  
   const isValid = pattern.test(value);
+  
+  // Debug logging for email validation
+  if (rule.message === 'Please enter a valid email address') {
+    console.log('Email validation debug:', {
+      value,
+      pattern: pattern.toString(),
+      isValid,
+      ruleValue: rule.value,
+      ruleValueType: typeof rule.value
+    });
+  }
+  
   return {
     isValid,
     error: isValid ? null : rule.message,

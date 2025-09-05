@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FormField as FormFieldType, FormResponse } from '../../types/form';
 import { FormField } from './FormField';
 import { FormSubmit } from './FormSubmit';
@@ -39,6 +39,34 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     clearTouched,
   } = useFormValidation(fields);
 
+  // Clean up form values when schema changes (remove data for fields that no longer exist)
+  useEffect(() => {
+    const currentFieldIds = fields.map(field => field.id);
+    const currentFormValues = { ...formValues };
+    let hasChanges = false;
+
+    // Remove values for fields that no longer exist in the schema
+    Object.keys(currentFormValues).forEach(key => {
+      if (!currentFieldIds.includes(key)) {
+        delete currentFormValues[key];
+        hasChanges = true;
+      }
+    });
+
+    // Add default values for new fields that don't exist in form values
+    fields.forEach(field => {
+      if (currentFormValues[field.id] === undefined) {
+        currentFormValues[field.id] = field.type === 'multi_choice' ? [] : '';
+        hasChanges = true;
+      }
+    });
+
+    if (hasChanges) {
+      setFormValues(currentFormValues);
+    }
+  }, [fields]); // Only run when fields change
+
+
   const handleFieldChange = useCallback((fieldId: string, value: any) => {
     const field = fields.find(f => f.id === fieldId);
     if (!field) return;
@@ -57,15 +85,22 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   }, [setFieldTouched]);
 
   const handleSubmit = useCallback(async () => {
+    // Mark all fields as touched to show validation errors
+    fields.forEach(field => {
+      setFieldTouched(field.id);
+    });
+
     const isValid = validateForm(formValues);
     if (!isValid) {
+      console.log('Validation errors found:', errors);
+      console.log('Form values:', formValues);
       onError?.('Please fix all validation errors before submitting');
       return;
     }
 
     setIsSubmitting(true);
     try {
-      const formattedData = formatFormResponse(formValues);
+      const formattedData = formatFormResponse(formValues, fields);
       await onSubmit(formattedData);
       onSuccess?.();
     } catch (error) {
@@ -73,7 +108,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     } finally {
       setIsSubmitting(false);
     }
-  }, [formValues, validateForm, onSubmit, onSuccess, onError]);
+  }, [formValues, validateForm, onSubmit, onSuccess, onError, fields, setFieldTouched]);
 
   const handleReset = useCallback(() => {
     setFormValues(initialValues);
@@ -81,12 +116,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     clearTouched();
   }, [setFormValues, initialValues, clearErrors, clearTouched]);
 
-  const isValid = Object.keys(errors).length === 0 && 
-    fields.every(field => {
-      if (!field.required) return true;
-      const value = formValues[field.id];
-      return value && (Array.isArray(value) ? value.length > 0 : value !== '');
-    });
+  const isValid = Object.keys(errors).length === 0;
   const hasErrors = Object.keys(errors).length > 0;
 
   return (

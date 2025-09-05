@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { Header } from './components/Layout/Header';
 import { DynamicForm } from './components/Form/DynamicForm';
+import { SimpleSchemaEditor } from './components/SchemaEditor/SimpleSchemaEditor';
 import { sampleFormSchema, extendedFormSchema } from './data/formSchema';
-import { FormResponse } from './types/form';
+import { FormResponse, FormField } from './types/form';
+import { useSchemaStorage } from './hooks/useSchemaStorage';
 
 const App: React.FC = () => {
-  const [currentSchema, setCurrentSchema] = useState(sampleFormSchema);
+  const { schema, updateSchema } = useSchemaStorage();
+  
   const [showSuccess, setShowSuccess] = useState(false);
   const [submittedData, setSubmittedData] = useState<FormResponse | null>(null);
+  const [showSchemaEditor, setShowSchemaEditor] = useState(false);
 
   const handleFormSubmit = async (data: FormResponse) => {
     console.log('Form submitted with data:', JSON.stringify(data, null, 2));
@@ -29,9 +33,22 @@ const App: React.FC = () => {
   };
 
   const switchSchema = () => {
-    setCurrentSchema(prev => 
-      prev === sampleFormSchema ? extendedFormSchema : sampleFormSchema
-    );
+    const isCurrentlyBasic = JSON.stringify(schema) === JSON.stringify(sampleFormSchema);
+    updateSchema(isCurrentlyBasic ? extendedFormSchema : sampleFormSchema);
+  };
+
+  const handleSchemaChange = (newSchema: FormField[]) => {
+    updateSchema(newSchema);
+    setShowSuccess(false);
+    setSubmittedData(null);
+  };
+
+  const openSchemaEditor = () => {
+    setShowSchemaEditor(true);
+  };
+
+  const closeSchemaEditor = () => {
+    setShowSchemaEditor(false);
   };
 
   return (
@@ -44,12 +61,23 @@ const App: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
               KYC Form
             </h2>
-            <button
-              onClick={switchSchema}
-              className="btn-secondary"
-            >
-              Switch to {currentSchema === sampleFormSchema ? 'Extended' : 'Basic'} Form
-            </button>
+            <div className="flex space-x-3">
+              <button
+                onClick={openSchemaEditor}
+                className="btn-primary"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit Schema
+              </button>
+              <button
+                onClick={switchSchema}
+                className="btn-secondary"
+              >
+                Switch to {JSON.stringify(schema) === JSON.stringify(sampleFormSchema) ? 'Extended' : 'Basic'} Form
+              </button>
+            </div>
           </div>
           <p className="text-gray-600 dark:text-gray-400">
             Please fill out the form below with your information. All required fields are marked with an asterisk (*).
@@ -85,7 +113,7 @@ const App: React.FC = () => {
         )}
 
         <DynamicForm
-          fields={currentSchema}
+          fields={schema}
           onSubmit={handleFormSubmit}
           onSuccess={handleSuccess}
           onError={handleError}
@@ -103,6 +131,13 @@ const App: React.FC = () => {
           </div>
         )}
       </main>
+
+      <SimpleSchemaEditor
+        isOpen={showSchemaEditor}
+        onClose={closeSchemaEditor}
+        onSchemaChange={handleSchemaChange}
+        currentSchema={schema}
+      />
     </div>
   );
 };

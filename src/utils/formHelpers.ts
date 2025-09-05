@@ -20,14 +20,22 @@ export const getInitialFormValues = (fields: FormField[]): FormResponse => {
   return initialValues;
 };
 
-export const formatFormResponse = (values: FormResponse): FormResponse => {
+export const formatFormResponse = (values: FormResponse, fields?: FormField[]): FormResponse => {
   const formatted: FormResponse = {};
   
-  Object.entries(values).forEach(([key, value]) => {
-    if (Array.isArray(value) && value.length === 0) {
-      formatted[key] = '';
-    } else {
-      formatted[key] = value;
+  // If fields are provided, only include data for fields that exist in the schema
+  const keysToProcess = fields 
+    ? fields.map(field => field.id)
+    : Object.keys(values);
+  
+  keysToProcess.forEach(key => {
+    const value = values[key];
+    if (value !== undefined) {
+      if (Array.isArray(value) && value.length === 0) {
+        formatted[key] = '';
+      } else {
+        formatted[key] = value;
+      }
     }
   });
   

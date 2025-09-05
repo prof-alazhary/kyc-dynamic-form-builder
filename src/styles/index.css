@@ -56,4 +56,32 @@
   .btn-secondary {
     @apply bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 font-medium py-2 px-4 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
   }
+  
+  .btn-sm {
+    @apply px-2 py-1 text-sm;
+  }
+  
+  .json-editor-container {
+    @apply flex flex-col h-full;
+  }
+  
+  .json-editor-header {
+    @apply flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600;
+  }
+  
+  .json-editor-wrapper {
+    @apply flex-1 relative;
+  }
+  
+  .json-editor-wrapper.focused {
+    @apply ring-2 ring-primary-500 ring-opacity-50;
+  }
+  
+  .json-editor-textarea {
+    @apply w-full h-full p-4 font-mono text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 resize-none focus:outline-none;
+  }
+  
+  .json-editor-footer {
+    @apply p-2 bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600;
+  }
 }
