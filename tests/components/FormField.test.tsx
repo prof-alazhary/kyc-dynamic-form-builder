@@ -1,27 +1,22 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { FormField } from '../../src/components/Form/FormField';
-import { FormField as FormFieldType } from '../../src/types/form';
+import { mockBasicFormFields, mockFormResponse } from '../fixtures/mockFormData';
 
-const mockTextField: FormFieldType = {
-  id: 'test-field',
-  label: 'Test Field',
-  type: 'text',
-  required: true,
-  placeholder: 'Enter test value',
-};
+const mockTextField = mockBasicFormFields[0]; // name field
+const mockEmailField = mockBasicFormFields[1]; // email field
 
-const mockRadioField: FormFieldType = {
+const mockRadioField = {
   id: 'gender',
   label: 'Gender',
-  type: 'radio_buttons',
+  type: 'radio_buttons' as const,
   required: true,
   options: ['Male', 'Female', 'Other'],
 };
 
-const mockCheckboxField: FormFieldType = {
+const mockCheckboxField = {
   id: 'hobbies',
   label: 'Hobbies',
-  type: 'multi_choice',
+  type: 'multi_choice' as const,
   required: true,
   options: ['Reading', 'Sports', 'Music'],
   min: 1,
@@ -39,8 +34,8 @@ describe('FormField', () => {
       />
     );
 
-    expect(screen.getByLabelText(/test field/i)).toBeInTheDocument();
-    expect(screen.getByPlaceholderText(/enter test value/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/name/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(/enter your name/i)).toBeInTheDocument();
   });
 
   it('renders radio buttons correctly', () => {
@@ -85,7 +80,7 @@ describe('FormField', () => {
       />
     );
 
-    const input = screen.getByPlaceholderText(/enter test value/i);
+    const input = screen.getByPlaceholderText(/enter your name/i);
     fireEvent.change(input, { target: { value: 'test value' } });
 
     expect(mockOnChange).toHaveBeenCalledWith('test value');
@@ -95,13 +90,26 @@ describe('FormField', () => {
     const mockOnChange = vi.fn();
     render(
       <FormField
-        field={mockTextField}
+        field={mockEmailField}
         value=""
         onChange={mockOnChange}
-        error="This field is required"
+        error="Email is required"
       />
     );
 
-    expect(screen.getByText(/this field is required/i)).toBeInTheDocument();
+    expect(screen.getByText(/email is required/i)).toBeInTheDocument();
+  });
+
+  it('renders with mock form response data', () => {
+    const mockOnChange = vi.fn();
+    render(
+      <FormField
+        field={mockTextField}
+        value={mockFormResponse.name}
+        onChange={mockOnChange}
+      />
+    );
+
+    expect(screen.getByDisplayValue(mockFormResponse.name)).toBeInTheDocument();
   });
 });

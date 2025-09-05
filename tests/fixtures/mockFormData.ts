@@ -51,3 +51,15 @@ export const mockInvalidFormResponse = {
   country: '',
   bio: '',
 };
+
+export const mockExtendedFormResponse = {
+  ...mockFormResponse,
+  age: '25',
+  phone: '+1234567890',
+};
+
+export const mockExtendedInvalidFormResponse = {
+  ...mockInvalidFormResponse,
+  age: '15', // Invalid age
+  phone: 'invalid-phone',
+};

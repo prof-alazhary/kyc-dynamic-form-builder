@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { validateField } from '../../src/utils/validation';
 import { ValidationRule } from '../../src/types/validation';
+import { mockBasicFormFields, mockFormResponse, mockInvalidFormResponse } from '../fixtures/mockFormData';
 
 describe('validation', () => {
   describe('validateField', () => {
@@ -91,6 +92,23 @@ describe('validation', () => {
 
     it('returns null when no validation rules', () => {
       expect(validateField('any value', [])).toBeNull();
+    });
+
+    it('validates mock form fields correctly', () => {
+      const nameField = mockBasicFormFields[0];
+      const emailField = mockBasicFormFields[1];
+
+      // Test valid name
+      expect(validateField(mockFormResponse.name, nameField.validation!)).toBeNull();
+      
+      // Test invalid name (empty)
+      expect(validateField(mockInvalidFormResponse.name, nameField.validation!)).toBe('Name is required');
+      
+      // Test valid email
+      expect(validateField(mockFormResponse.email, emailField.validation!)).toBeNull();
+      
+      // Test invalid email
+      expect(validateField(mockInvalidFormResponse.email, emailField.validation!)).toBe('Invalid email format');
     });
   });
 });

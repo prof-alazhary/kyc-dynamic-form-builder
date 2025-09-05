@@ -81,7 +81,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     clearTouched();
   }, [setFormValues, initialValues, clearErrors, clearTouched]);
 
-  const isValid = Object.keys(errors).length === 0;
+  const isValid = Object.keys(errors).length === 0 && 
+    fields.every(field => {
+      if (!field.required) return true;
+      const value = formValues[field.id];
+      return value && (Array.isArray(value) ? value.length > 0 : value !== '');
+    });
   const hasErrors = Object.keys(errors).length > 0;
 
   return (
