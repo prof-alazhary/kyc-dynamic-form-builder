@@ -113,37 +113,39 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-          <div>
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4 z-50 overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-6xl max-h-[95vh] flex flex-col my-4">
+        {/* Header - Fixed */}
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="min-w-0 flex-1 mr-4">
+            <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white truncate">
               Edit Form Schema
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mt-1">
               Modify the JSON schema below to customize your form
             </p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0 p-1"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="flex-1 p-6">
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-2">
               <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 JSON Schema
               </label>
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   onClick={handleReset}
-                  className="btn-sm btn-secondary"
+                  className="btn-sm btn-secondary text-xs sm:text-sm"
                 >
                   Reset to Default
                 </button>
@@ -156,7 +158,7 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
                       // Ignore formatting errors
                     }
                   }}
-                  className="btn-sm btn-secondary"
+                  className="btn-sm btn-secondary text-xs sm:text-sm"
                 >
                   Format JSON
                 </button>
@@ -166,26 +168,30 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
             <textarea
               value={jsonValue}
               onChange={handleJsonChange}
-              className={`w-full h-96 p-4 font-mono text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 ${
+              className={`w-full min-h-[300px] sm:min-h-[400px] max-h-[50vh] p-3 sm:p-4 font-mono text-xs sm:text-sm border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 overflow-y-auto ${
                 isValid 
                   ? 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100'
                   : 'border-error-500 bg-error-50 dark:bg-error-900/20 text-error-900 dark:text-error-100'
               }`}
               placeholder="Enter your form schema as JSON..."
               spellCheck={false}
+              style={{ 
+                fontFamily: 'Monaco, Menlo, "Ubuntu Mono", monospace',
+                lineHeight: '1.4'
+              }}
             />
             
             {error && (
               <div className="mt-2 p-3 bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-md">
                 <div className="flex">
-                  <svg className="w-5 h-5 text-error-400 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-error-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <div>
-                    <p className="text-sm text-error-800 dark:text-error-200 font-medium">
+                  <div className="min-w-0">
+                    <p className="text-xs sm:text-sm text-error-800 dark:text-error-200 font-medium">
                       Invalid JSON
                     </p>
-                    <p className="text-xs text-error-700 dark:text-error-300 mt-1">
+                    <p className="text-xs text-error-700 dark:text-error-300 mt-1 break-words">
                       {error}
                     </p>
                   </div>
@@ -194,7 +200,7 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
             )}
           </div>
 
-          <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+          <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-md">
             <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
               Schema Structure
             </h3>
@@ -207,8 +213,9 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700">
-          <div className="text-sm text-gray-500 dark:text-gray-400">
+        {/* Footer - Fixed */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0 gap-3 sm:gap-0">
+          <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             {isValid ? (
               <span className="text-success-600 dark:text-success-400">
                 ✓ Valid JSON schema
@@ -219,17 +226,17 @@ export const SimpleSchemaEditor: React.FC<SimpleSchemaEditorProps> = ({
               </span>
             )}
           </div>
-          <div className="flex space-x-3">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
             <button
               onClick={onClose}
-              className="btn-secondary"
+              className="btn-secondary text-sm w-full sm:w-auto"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
               disabled={!isValid}
-              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed text-sm w-full sm:w-auto"
             >
               Save Schema
             </button>

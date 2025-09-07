@@ -4,7 +4,7 @@ A single-page React application that renders dynamic KYC forms based on JSON con
 
 ## 🎯 Project Overview
 
-This application dynamically renders KYC forms from JSON schemas, supporting multiple input types with real-time validation and a professional UI.
+This application dynamically renders KYC forms from JSON schemas, supporting multiple input types with real-time validation and a professional UI. **NEW**: Now includes a built-in JSON schema editor that allows users to edit, modify, and extend form schemas in real-time with localStorage persistence.
 
 ## 🏗️ Development Plan
 
@@ -29,7 +29,8 @@ kyc-dynamic-form-builder/
 │   │   ├── Form/
 │   │   │   ├── DynamicForm.tsx
 │   │   │   ├── FormField.tsx
-│   │   │   └── FormSubmit.tsx
+│   │   │   ├── FormSubmit.tsx
+│   │   │   └── MultiStepForm.tsx
 │   │   ├── UI/
 │   │   │   ├── Button.tsx
 │   │   │   ├── Input.tsx
@@ -37,20 +38,26 @@ kyc-dynamic-form-builder/
 │   │   │   ├── RadioGroup.tsx
 │   │   │   ├── CheckboxGroup.tsx
 │   │   │   ├── Select.tsx
-│   │   │   └── ErrorMessage.tsx
+│   │   │   ├── ErrorMessage.tsx
+│   │   │   └── ProgressBar.tsx
 │   │   └── Layout/
 │   │       ├── Header.tsx
 │   │       └── ThemeToggle.tsx
+│   │   └── SchemaEditor/
+│   │       ├── SimpleSchemaEditor.tsx
+│   │       └── StepConfigEditor.tsx
 │   ├── hooks/
 │   │   ├── useFormValidation.ts
 │   │   ├── useLocalStorage.ts
+│   │   ├── useSchemaStorage.ts
 │   │   └── useTheme.ts
 │   ├── types/
 │   │   ├── form.ts
 │   │   └── validation.ts
 │   ├── utils/
 │   │   ├── validation.ts
-│   │   └── formHelpers.ts
+│   │   ├── formHelpers.ts
+│   │   └── multiStepHelpers.ts
 │   ├── data/
 │   │   └── formSchema.ts
 │   ├── styles/
@@ -164,9 +171,93 @@ kyc-dynamic-form-builder/
 - [x] Unit/integration tests
 - [x] Form schema switching (Basic/Extended)
 - [x] Professional UI with success/error states
-- [ ] Multi-step form pagination
+- [x] **NEW: JSON Schema Editor** - Real-time schema editing with validation
+- [x] **NEW: Schema Persistence** - Save/load custom schemas from localStorage
+- [x] **NEW: Dynamic Form Updates** - Forms update immediately when schema changes
+- [x] **NEW: Multi-step Form Support** - Pagination with custom step configuration
+- [x] **NEW: Step Configuration Editor** - Visual step management with field assignment
+- [x] **NEW: Progress Bar** - Visual step progress indicator
 - [ ] Custom field types (date, file)
 - [ ] Form preview mode
+
+## 🚀 Multi-Step Form Features
+
+### ✨ Step Configuration
+- **Custom Step Management**: Create, edit, and organize form steps with visual interface
+- **Field Assignment**: Drag-and-drop style field assignment to specific steps
+- **Step Details**: Set custom titles and descriptions for each step
+- **Flexible Organization**: Add, remove, and reorder steps as needed
+
+### 🎯 Step Navigation
+- **Progress Bar**: Visual indicator showing current step and overall progress
+- **Step Controls**: Previous/Next buttons with validation
+- **Step Persistence**: Current step saved to localStorage
+- **Validation**: Step-by-step validation with error handling
+
+### 📱 Responsive Design
+- **Mobile Optimized**: Touch-friendly interface for mobile devices
+- **Flexible Layouts**: Responsive grids and button layouts
+- **Better Scrolling**: Improved modal scrolling and textarea behavior
+- **Adaptive UI**: Elements resize appropriately for different screen sizes
+
+### 🛠️ Step Configuration Usage
+1. Click **"Multi Step"** button to enable multi-step mode
+2. Click **"Configure Steps"** to open the step editor
+3. Set step titles and descriptions
+4. Assign fields to steps using checkboxes
+5. Add/remove/reorder steps as needed
+6. Save configuration to apply changes
+
+## 🎨 Schema Editor Features
+
+### ✨ Real-Time Schema Editing
+- **JSON Editor**: Edit form schemas directly in a user-friendly JSON editor
+- **Live Validation**: Real-time JSON validation with error highlighting
+- **Format Support**: Auto-format JSON with built-in formatting tools
+- **Reset Options**: Reset to default schemas or clear the editor
+
+### 💾 Schema Persistence
+- **localStorage Integration**: Automatically save schemas to browser storage
+- **Schema Management**: Load existing schemas or create new ones
+- **Data Cleanup**: Automatically remove form data for deleted fields
+- **Regex Handling**: Proper handling of RegExp patterns in validation rules
+
+### 🔄 Dynamic Form Updates
+- **Instant Updates**: Forms update immediately when schema changes
+- **Field Management**: Add, remove, or modify fields in real-time
+- **Validation Sync**: Form validation updates with schema changes
+- **Data Integrity**: Only submit data for fields in current schema
+
+### 🛠️ Schema Editor Usage
+1. Click **"Edit Schema"** button in the main interface
+2. Modify the JSON schema in the editor
+3. Use **"Format JSON"** to clean up the formatting
+4. Click **"Save Schema"** to apply changes
+5. Form updates automatically with new schema
+
+### 📝 Schema Structure Example
+```json
+[
+  {
+    "id": "email",
+    "label": "Email Address", 
+    "type": "text",
+    "required": true,
+    "placeholder": "Enter your email address",
+    "validation": [
+      {
+        "type": "required",
+        "message": "Email is required"
+      },
+      {
+        "type": "pattern",
+        "value": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+        "message": "Please enter a valid email address"
+      }
+    ]
+  }
+]
+```
 
 ## 🚀 Getting Started
 
@@ -284,7 +375,7 @@ interface FormResponse {
 
 ## 🎉 Project Status: COMPLETED
 
-The Dynamic KYC Form Builder has been successfully implemented with all core requirements met and several bonus features included.
+The Dynamic KYC Form Builder has been successfully implemented with all core requirements met and several bonus features included, including the new JSON Schema Editor functionality.
 
 ### ✅ What's Been Implemented
 
@@ -305,6 +396,14 @@ The Dynamic KYC Form Builder has been successfully implemented with all core req
 - ✅ Clean, modular TypeScript codebase
 - ✅ ESLint + Prettier code quality tools
 - ✅ Tailwind CSS for consistent styling
+
+**NEW: Schema Editor Features:**
+- ✅ **JSON Schema Editor** - Real-time editing with validation
+- ✅ **Schema Persistence** - Save/load schemas from localStorage
+- ✅ **Dynamic Form Updates** - Forms update immediately when schema changes
+- ✅ **Regex Pattern Handling** - Proper RegExp support in validation rules
+- ✅ **Data Cleanup** - Automatic removal of data for deleted fields
+- ✅ **Error Handling** - Comprehensive validation error display
 
 ### 🚀 How to Run
 
@@ -337,6 +436,9 @@ The Dynamic KYC Form Builder has been successfully implemented with all core req
 - **Professional UI**: Clean, modern interface with proper error states
 - **Type Safety**: Full TypeScript implementation
 - **Testing**: Comprehensive test coverage
+- **NEW: Schema Editor**: Real-time JSON schema editing with validation
+- **NEW: Schema Persistence**: Save/load custom schemas from localStorage
+- **NEW: Dynamic Updates**: Forms update immediately when schema changes
 
 The application is now ready for use and demonstrates all the required functionality for the technical assessment.
 

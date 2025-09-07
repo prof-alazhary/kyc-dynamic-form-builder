@@ -127,17 +127,6 @@ const validatePattern = (value: any, rule: ValidationRule): ValidationResult => 
   
   const isValid = pattern.test(value);
   
-  // Debug logging for email validation
-  if (rule.message === 'Please enter a valid email address') {
-    console.log('Email validation debug:', {
-      value,
-      pattern: pattern.toString(),
-      isValid,
-      ruleValue: rule.value,
-      ruleValueType: typeof rule.value
-    });
-  }
-  
   return {
     isValid,
     error: isValid ? null : rule.message,

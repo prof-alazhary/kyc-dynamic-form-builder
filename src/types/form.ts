@@ -11,6 +11,21 @@ export interface FormField {
   validation?: ValidationRule[];
   placeholder?: string;
   description?: string;
+  step?: number; // Which step this field belongs to
+}
+
+export interface FormStep {
+  id: number;
+  title: string;
+  description?: string;
+  fields: FormField[];
+}
+
+export interface MultiStepFormConfig {
+  steps: FormStep[];
+  allowStepNavigation?: boolean; // Allow going back to previous steps
+  validateOnStepChange?: boolean; // Validate fields when changing steps
+  showProgressBar?: boolean; // Show progress indicator
 }
 
 export interface ValidationRule {

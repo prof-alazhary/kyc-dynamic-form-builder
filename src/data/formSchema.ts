@@ -1,6 +1,6 @@
 import { FormField } from '../types/form';
 
-export const sampleFormSchema: FormField[] = [
+export const defaultFormSchema: FormField[] = [
   {
     id: 'full_name',
     label: 'Full Name',
@@ -34,6 +34,34 @@ export const sampleFormSchema: FormField[] = [
         type: 'pattern',
         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
         message: 'Please enter a valid email address',
+      },
+    ],
+  },
+  {
+    id: 'age',
+    label: 'Age',
+    type: 'text',
+    required: true,
+    placeholder: 'Enter your age',
+    validation: [
+      {
+        type: 'required',
+        message: 'Age is required',
+      },
+      {
+        type: 'pattern',
+        value: /^\d+$/,
+        message: 'Age must be a number',
+      },
+      {
+        type: 'min',
+        value: 18,
+        message: 'You must be at least 18 years old',
+      },
+      {
+        type: 'max',
+        value: 120,
+        message: 'Please enter a valid age',
       },
     ],
   },
@@ -89,52 +117,6 @@ export const sampleFormSchema: FormField[] = [
     ],
   },
   {
-    id: 'bio',
-    label: 'Bio',
-    type: 'textarea',
-    required: false,
-    placeholder: 'Tell us about yourself...',
-    validation: [
-      {
-        type: 'maxLength',
-        value: 500,
-        message: 'Bio must be no more than 500 characters',
-      },
-    ],
-  },
-];
-
-export const extendedFormSchema: FormField[] = [
-  ...sampleFormSchema,
-  {
-    id: 'age',
-    label: 'Age',
-    type: 'text',
-    required: true,
-    placeholder: 'Enter your age',
-    validation: [
-      {
-        type: 'required',
-        message: 'Age is required',
-      },
-      {
-        type: 'pattern',
-        value: /^\d+$/,
-        message: 'Age must be a number',
-      },
-      {
-        type: 'min',
-        value: 18,
-        message: 'You must be at least 18 years old',
-      },
-      {
-        type: 'max',
-        value: 120,
-        message: 'Please enter a valid age',
-      },
-    ],
-  },
-  {
     id: 'phone',
     label: 'Phone Number',
     type: 'text',
@@ -145,6 +127,20 @@ export const extendedFormSchema: FormField[] = [
         type: 'pattern',
         value: /^[\+]?[1-9][\d]{0,15}$/,
         message: 'Please enter a valid phone number',
+      },
+    ],
+  },
+  {
+    id: 'bio',
+    label: 'Bio',
+    type: 'textarea',
+    required: false,
+    placeholder: 'Tell us about yourself...',
+    validation: [
+      {
+        type: 'maxLength',
+        value: 500,
+        message: 'Bio must be no more than 500 characters',
       },
     ],
   },

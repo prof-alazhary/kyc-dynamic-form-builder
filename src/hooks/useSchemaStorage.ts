@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { FormField } from '../types/form';
-import { sampleFormSchema } from '../data/formSchema';
+import { defaultFormSchema } from '../data/formSchema';
 
 export const useSchemaStorage = () => {
-  const [schema, setSchema] = useState<FormField[]>(sampleFormSchema);
+  const [schema, setSchema] = useState<FormField[]>(defaultFormSchema);
 
   useEffect(() => {
     const savedSchema = localStorage.getItem('form-schema');
@@ -47,10 +47,10 @@ export const useSchemaStorage = () => {
   };
 
   const resetToDefault = () => {
-    setSchema(sampleFormSchema);
+    setSchema(defaultFormSchema);
     
     // Convert RegExp objects to strings before saving to localStorage
-    const schemaForStorage = sampleFormSchema.map(field => ({
+    const schemaForStorage = defaultFormSchema.map(field => ({
       ...field,
       validation: field.validation?.map((rule: any) => ({
         ...rule,
