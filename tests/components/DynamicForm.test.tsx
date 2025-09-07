@@ -84,7 +84,7 @@ describe('DynamicForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
-  it('validates required fields using mock data', () => {
+  it('allows submission when form is empty (validation on submit)', () => {
     render(
       <DynamicForm
         fields={mockBasicFormFields}
@@ -95,7 +95,8 @@ describe('DynamicForm', () => {
     );
 
     const submitButton = screen.getByText(/submit form/i);
-    expect(submitButton).toBeDisabled();
+    // Button should be enabled initially - validation happens on submit
+    expect(submitButton).not.toBeDisabled();
   });
 
   it('handles extended form response data', () => {

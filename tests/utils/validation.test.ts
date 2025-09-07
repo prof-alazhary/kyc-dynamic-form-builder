@@ -110,5 +110,62 @@ describe('validation', () => {
       // Test invalid email
       expect(validateField(mockInvalidFormResponse.email, emailField.validation!)).toBe('Invalid email format');
     });
+
+    it('validates file size correctly', () => {
+      const rules: ValidationRule[] = [
+        {
+          type: 'fileSize',
+          value: 1024, // 1KB
+          message: 'File size must be less than 1KB',
+        },
+      ];
+
+      // Mock file objects
+      const smallFile = new File(['content'], 'small.txt', { type: 'text/plain' });
+      Object.defineProperty(smallFile, 'size', { value: 512 }); // 512 bytes
+
+      const largeFile = new File(['content'], 'large.txt', { type: 'text/plain' });
+      Object.defineProperty(largeFile, 'size', { value: 2048 }); // 2KB
+
+      expect(validateField(smallFile, rules)).toBeNull();
+      expect(validateField(largeFile, rules)).toBe('File size must be less than 1KB');
+      expect(validateField(null, rules)).toBeNull(); // No file is valid
+    });
+
+    it('validates file type correctly', () => {
+      const rules: ValidationRule[] = [
+        {
+          type: 'fileType',
+          value: ['image/*'],
+          message: 'Please upload an image file',
+        },
+      ];
+
+      const imageFile = new File(['content'], 'image.jpg', { type: 'image/jpeg' });
+      const textFile = new File(['content'], 'document.txt', { type: 'text/plain' });
+
+      expect(validateField(imageFile, rules)).toBeNull();
+      expect(validateField(textFile, rules)).toBe('Please upload an image file');
+      expect(validateField(null, rules)).toBeNull(); // No file is valid
+    });
+
+    it('validates date range correctly', () => {
+      const rules: ValidationRule[] = [
+        {
+          type: 'dateRange',
+          value: {
+            minDate: '2020-01-01',
+            maxDate: '2023-12-31',
+          },
+          message: 'Please enter a valid date',
+        },
+      ];
+
+      expect(validateField('2022-06-15', rules)).toBeNull(); // Valid date
+      expect(validateField('2019-12-31', rules)).toBe('Please enter a valid date'); // Too early
+      expect(validateField('2024-01-01', rules)).toBe('Please enter a valid date'); // Too late
+      expect(validateField('invalid-date', rules)).toBe('Please enter a valid date'); // Invalid format
+      expect(validateField('', rules)).toBeNull(); // Empty is valid
+    });
   });
 });
