@@ -5,6 +5,8 @@ import { TextArea } from '../UI/TextArea';
 import { RadioGroup } from '../UI/RadioGroup';
 import { CheckboxGroup } from '../UI/CheckboxGroup';
 import { Select } from '../UI/Select';
+import { DatePickerComponent } from '../UI/DatePicker';
+import { FileUpload } from '../UI/FileUpload';
 
 interface FormFieldProps {
   field: FormFieldType;
@@ -80,6 +82,32 @@ export const FormField: React.FC<FormFieldProps> = ({
           options={field.options || []}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
+        />
+      );
+
+    case 'date':
+      return (
+        <DatePickerComponent
+          {...commonProps}
+          id={field.id}
+          value={value || ''}
+          onChange={onChange}
+          placeholder={field.placeholder}
+          minDate={field.minDate}
+          maxDate={field.maxDate}
+        />
+      );
+
+    case 'file':
+      return (
+        <FileUpload
+          {...commonProps}
+          id={field.id}
+          value={value || null}
+          onChange={onChange}
+          accept={field.accept}
+          multiple={field.multiple}
+          maxFileSize={field.maxFileSize}
         />
       );
 

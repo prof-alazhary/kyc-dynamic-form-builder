@@ -96,4 +96,112 @@
   .step-header {
     @apply text-center;
   }
+  
+  .file-upload-container {
+    @apply w-full;
+  }
+  
+  .file-upload-dropzone {
+    @apply border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center cursor-pointer transition-colors duration-200 hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20;
+  }
+  
+  .file-upload-dropzone.drag-over {
+    @apply border-primary-500 bg-primary-50 dark:bg-primary-900/20;
+  }
+  
+  .file-upload-dropzone.disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+  
+  .file-upload-content {
+    @apply flex flex-col items-center space-y-2;
+  }
+  
+  .file-upload-icon {
+    @apply w-8 h-8 text-gray-400 dark:text-gray-500;
+  }
+  
+  .file-upload-text {
+    @apply space-y-1;
+  }
+  
+  .file-upload-primary {
+    @apply text-sm font-medium text-gray-900 dark:text-gray-100;
+  }
+  
+  .file-upload-secondary {
+    @apply text-xs text-gray-500 dark:text-gray-400;
+  }
+  
+  .file-upload-selected {
+    @apply mt-4 flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-md;
+  }
+  
+  .file-upload-selected-text {
+    @apply text-sm text-gray-700 dark:text-gray-300 truncate flex-1 mr-2;
+  }
+  
+  .file-upload-remove {
+    @apply text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 rounded transition-colors duration-200;
+  }
+  
+  /* React DatePicker Custom Styles */
+  .react-datepicker-wrapper {
+    @apply w-full;
+  }
+  
+  .react-datepicker__input-container input {
+    @apply form-input;
+  }
+  
+  .react-datepicker {
+    @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg;
+  }
+  
+  .react-datepicker__header {
+    @apply bg-gray-50 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600 rounded-t-lg;
+  }
+  
+  .react-datepicker__current-month {
+    @apply text-gray-900 dark:text-gray-100 font-semibold;
+  }
+  
+  .react-datepicker__day-name {
+    @apply text-gray-600 dark:text-gray-400 font-medium;
+  }
+  
+  .react-datepicker__day {
+    @apply text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600;
+  }
+  
+  .react-datepicker__day--selected {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+  
+  .react-datepicker__day--keyboard-selected {
+    @apply bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400;
+  }
+  
+  .react-datepicker__day--disabled {
+    @apply text-gray-400 dark:text-gray-600 cursor-not-allowed;
+  }
+  
+  .react-datepicker__navigation {
+    @apply text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100;
+  }
+  
+  .react-datepicker__year-dropdown,
+  .react-datepicker__month-dropdown {
+    @apply bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg;
+  }
+  
+  .react-datepicker__year-option,
+  .react-datepicker__month-option {
+    @apply text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600;
+  }
+  
+  .react-datepicker__year-option--selected,
+  .react-datepicker__month-option--selected {
+    @apply bg-primary-600 text-white;
+  }
 }

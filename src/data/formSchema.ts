@@ -144,4 +144,46 @@ export const defaultFormSchema: FormField[] = [
       },
     ],
   },
+  {
+    id: 'birth_date',
+    label: 'Birth Date',
+    type: 'date',
+    required: true,
+    minDate: '1900-01-01',
+    maxDate: new Date().toISOString().split('T')[0], // Today's date
+    validation: [
+      {
+        type: 'required',
+        message: 'Birth date is required',
+      },
+      {
+        type: 'dateRange',
+        value: {
+          minDate: '1900-01-01',
+          maxDate: new Date().toISOString().split('T')[0],
+        },
+        message: 'Please enter a valid birth date',
+      },
+    ],
+  },
+  {
+    id: 'profile_picture',
+    label: 'Profile Picture',
+    type: 'file',
+    required: false,
+    accept: 'image/*',
+    maxFileSize: 5 * 1024 * 1024, // 5MB
+    validation: [
+      {
+        type: 'fileType',
+        value: ['image/*'],
+        message: 'Please upload an image file',
+      },
+      {
+        type: 'fileSize',
+        value: 5 * 1024 * 1024,
+        message: 'File size must be less than 5MB',
+      },
+    ],
+  },
 ];

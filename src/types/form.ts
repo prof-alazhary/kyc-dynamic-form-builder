@@ -1,4 +1,4 @@
-export type FieldType = 'text' | 'textarea' | 'radio_buttons' | 'multi_choice' | 'drop_down';
+export type FieldType = 'text' | 'textarea' | 'radio_buttons' | 'multi_choice' | 'drop_down' | 'date' | 'file';
 
 export interface FormField {
   id: string;
@@ -12,6 +12,13 @@ export interface FormField {
   placeholder?: string;
   description?: string;
   step?: number; // Which step this field belongs to
+  // File-specific properties
+  accept?: string; // File types to accept (e.g., "image/*", ".pdf,.doc")
+  maxFileSize?: number; // Maximum file size in bytes
+  multiple?: boolean; // Allow multiple file selection
+  // Date-specific properties
+  minDate?: string; // Minimum date (ISO format)
+  maxDate?: string; // Maximum date (ISO format)
 }
 
 export interface FormStep {
@@ -29,13 +36,13 @@ export interface MultiStepFormConfig {
 }
 
 export interface ValidationRule {
-  type: 'required' | 'minLength' | 'maxLength' | 'min' | 'max' | 'pattern' | 'custom';
+  type: 'required' | 'minLength' | 'maxLength' | 'min' | 'max' | 'pattern' | 'custom' | 'fileSize' | 'fileType' | 'dateRange';
   value?: any;
   message: string;
 }
 
 export interface FormResponse {
-  [fieldId: string]: string | string[] | boolean | number;
+  [fieldId: string]: string | string[] | boolean | number | File | File[];
 }
 
 export interface FormState {

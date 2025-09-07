@@ -24,6 +24,12 @@ export const validateRule = (value: any, rule: ValidationRule): ValidationResult
       return validateMax(value, rule);
     case 'pattern':
       return validatePattern(value, rule);
+    case 'fileSize':
+      return validateFileSize(value, rule);
+    case 'fileType':
+      return validateFileType(value, rule);
+    case 'dateRange':
+      return validateDateRange(value, rule);
     default:
       return { isValid: true, error: null };
   }
@@ -131,4 +137,89 @@ const validatePattern = (value: any, rule: ValidationRule): ValidationResult => 
     isValid,
     error: isValid ? null : rule.message,
   };
+};
+
+const validateFileSize = (value: any, rule: ValidationRule): ValidationResult => {
+  if (!value) return { isValid: true, error: null };
+  
+  const maxSize = rule.value || 0;
+  const files = Array.isArray(value) ? value : [value];
+  
+  for (const file of files) {
+    if (file instanceof File && file.size > maxSize) {
+      return {
+        isValid: false,
+        error: rule.message,
+      };
+    }
+  }
+  
+  return { isValid: true, error: null };
+};
+
+const validateFileType = (value: any, rule: ValidationRule): ValidationResult => {
+  if (!value) return { isValid: true, error: null };
+  
+  const allowedTypes = rule.value || [];
+  const files = Array.isArray(value) ? value : [value];
+  
+  for (const file of files) {
+    if (file instanceof File) {
+      const fileType = file.type;
+      const fileName = file.name.toLowerCase();
+      
+      const isValidType = allowedTypes.some((allowedType: string) => {
+        if (allowedType.includes('*')) {
+          // Handle wildcard types like "image/*"
+          const baseType = allowedType.split('/')[0];
+          return fileType.startsWith(baseType + '/');
+        } else if (allowedType.startsWith('.')) {
+          // Handle extensions like ".pdf"
+          return fileName.endsWith(allowedType);
+        } else {
+          // Handle exact MIME types
+          return fileType === allowedType;
+        }
+      });
+      
+      if (!isValidType) {
+        return {
+          isValid: false,
+          error: rule.message,
+        };
+      }
+    }
+  }
+  
+  return { isValid: true, error: null };
+};
+
+const validateDateRange = (value: any, rule: ValidationRule): ValidationResult => {
+  if (!value || typeof value !== 'string') return { isValid: true, error: null };
+  
+  const date = new Date(value);
+  const { minDate, maxDate } = rule.value || {};
+  
+  if (isNaN(date.getTime())) {
+    return {
+      isValid: false,
+      error: rule.message,
+    };
+  }
+  
+  if (minDate && date < new Date(minDate)) {
+    return {
+      isValid: false,
+      error: rule.message,
+    };
+  }
+  
+  if (maxDate && date > new Date(maxDate)) {
+    return {
+      isValid: false,
+      error: rule.message,
+    };
+  }
+  
+  return { isValid: true, error: null };
 };

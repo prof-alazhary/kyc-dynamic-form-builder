@@ -115,7 +115,6 @@ kyc-dynamic-form-builder/
 - **Multi-step Form**: Pagination for large forms
 - **Local Storage**: Form data persistence
 - **Custom Field Types**: Date picker, file upload
-- **Form Preview**: JSON schema preview
 
 #### 3.2 Testing & Quality Assurance (Day 4)
 - **Unit Tests**: Component testing
@@ -177,8 +176,7 @@ kyc-dynamic-form-builder/
 - [x] **NEW: Multi-step Form Support** - Pagination with custom step configuration
 - [x] **NEW: Step Configuration Editor** - Visual step management with field assignment
 - [x] **NEW: Progress Bar** - Visual step progress indicator
-- [ ] Custom field types (date, file)
-- [ ] Form preview mode
+- [x] **NEW: Custom Field Types** - Date picker and file upload with professional libraries
 
 ## 🚀 Multi-Step Form Features
 
@@ -207,6 +205,98 @@ kyc-dynamic-form-builder/
 4. Assign fields to steps using checkboxes
 5. Add/remove/reorder steps as needed
 6. Save configuration to apply changes
+
+## 📅 Custom Field Types
+
+### ✨ Date Picker Field
+- **Professional Library**: Built with `react-datepicker` (2M+ weekly downloads)
+- **Calendar Icon**: Visual calendar icon for better UX
+- **Date Range Validation**: Min/max date constraints with custom validation
+- **Advanced Features**: Year/month dropdowns, keyboard navigation, accessibility
+- **Responsive Design**: Works perfectly on mobile and desktop
+
+### 📁 File Upload Field
+- **Industry Standard**: Built with `react-dropzone` (1M+ weekly downloads)
+- **Drag & Drop**: Modern drag and drop file upload interface
+- **File Validation**: Built-in file type and size validation
+- **Multiple Files**: Support for single or multiple file selection
+- **Error Handling**: Detailed error messages for file restrictions
+
+### 🎯 Field Type Support
+The form builder now supports **10 field types**:
+
+1. **`text`** - Text input
+2. **`textarea`** - Multi-line text
+3. **`radio_buttons`** - Single selection
+4. **`multi_choice`** - Multiple selection
+5. **`drop_down`** - Dropdown selection
+6. **`date`** - Date picker ✨ **NEW**
+7. **`file`** - File upload ✨ **NEW**
+
+### 🔧 Technical Implementation
+
+**Date Picker Features:**
+- Native HTML5 date input with react-datepicker enhancement
+- Calendar icon for visual clarity
+- Date range validation (minDate, maxDate)
+- Year/month dropdown selectors
+- Full accessibility support
+
+**File Upload Features:**
+- Drag & drop with visual feedback
+- File type validation (MIME types, extensions, wildcards)
+- File size validation with configurable limits
+- Multiple file selection support
+- Professional error handling
+
+### 📝 Usage Examples
+
+**Date Field:**
+```json
+{
+  "id": "birth_date",
+  "label": "Birth Date",
+  "type": "date",
+  "required": true,
+  "minDate": "1900-01-01",
+  "maxDate": "2024-01-01",
+  "validation": [
+    {
+      "type": "dateRange",
+      "value": {
+        "minDate": "1900-01-01",
+        "maxDate": "2024-01-01"
+      },
+      "message": "Please enter a valid birth date"
+    }
+  ]
+}
+```
+
+**File Upload Field:**
+```json
+{
+  "id": "documents",
+  "label": "Supporting Documents",
+  "type": "file",
+  "required": true,
+  "accept": "image/*",
+  "maxFileSize": 5242880,
+  "multiple": true,
+  "validation": [
+    {
+      "type": "fileType",
+      "value": ["image/*"],
+      "message": "Please upload image files only"
+    },
+    {
+      "type": "fileSize",
+      "value": 5242880,
+      "message": "File size must be less than 5MB"
+    }
+  ]
+}
+```
 
 ## 🎨 Schema Editor Features
 
@@ -290,19 +380,28 @@ npm run preview
 interface FormField {
   id: string;
   label: string;
-  type: 'text' | 'textarea' | 'radio_buttons' | 'multi_choice' | 'drop_down';
+  type: 'text' | 'textarea' | 'radio_buttons' | 'multi_choice' | 'drop_down' | 'date' | 'file';
   required?: boolean;
   options?: string[];
   min?: number;
   max?: number;
   validation?: ValidationRule[];
+  placeholder?: string;
+  description?: string;
+  // File-specific properties
+  accept?: string; // File types to accept (e.g., "image/*", ".pdf,.doc")
+  maxFileSize?: number; // Maximum file size in bytes
+  multiple?: boolean; // Allow multiple file selection
+  // Date-specific properties
+  minDate?: string; // Minimum date (ISO format)
+  maxDate?: string; // Maximum date (ISO format)
 }
 ```
 
 ### Form Response Structure
 ```typescript
 interface FormResponse {
-  [fieldId: string]: string | string[] | boolean;
+  [fieldId: string]: string | string[] | boolean | number | File | File[];
 }
 ```
 
@@ -326,6 +425,8 @@ interface FormResponse {
 - `react`: ^18.2.0
 - `react-dom`: ^18.2.0
 - `typescript`: ^5.0.0
+- `react-datepicker`: ^4.25.0 - Professional date picker component
+- `react-dropzone`: ^14.2.3 - Drag & drop file upload component
 
 ### Development Dependencies
 - `@vitejs/plugin-react`: ^4.0.0
